@@ -1,0 +1,26 @@
+section, nav { 
+    padding: 20px; 
+}
+
+body { 
+    padding-top: 20px; 
+}
+
+.fondo-verde { 
+    background-color: green; 
+    color: white; 
+}
+
+.fondo-rojo { 
+    background-color: red; 
+    color: white; 
+    border: 1px solid white; 
+}
+
+.fondo-amarillo { 
+    background-color: yellow; 
+    color: black; 
+    border: 1px solid white; 
+}
+
+ 

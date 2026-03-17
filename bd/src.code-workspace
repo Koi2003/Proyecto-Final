@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "../src"
+		},
+		{
+			"path": "../../../../Users/Koi -3-/Desktop/DAW/2DAW/Diseño/BoostrapWeb/css"
+		},
+		{
+			"path": "../../../../Users/Koi -3-/Desktop/DAW/2DAW/Diseño/BoostrapWeb/img"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "src"
+	}
+}

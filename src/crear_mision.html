@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Misión - SideQuest</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <style>
+        #mapa-mision {
+            height: 300px;
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <article class="container-fluid">
+                <a class="navbar-brand" href="index.html">SideQuest</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <section class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link" href="Entradas.html">Entradas</a></li>
+                        <li class="nav-item"><a class="nav-link" href="AcercaDe.html">Acerca de</a></li>
+                        <li class="nav-item"><a class="nav-link" href="Contacto.html">Contacto</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="perfil.php"><i class="bi bi-person-circle"></i> Perfil</a></li>
+                    </ul>
+                </section>
+            </article>
+        </nav>
+    </header>
+
+    <main class="container mt-5 mb-5">
+        <h2 class="text-center mb-4">Publicar Nueva Misión</h2>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card-1 bg-white shadow p-3 mb-5">
+                    <div class="card-body">
+                        <form id="formCrearMision">
+                            <div class="mb-3">
+                                <label for="titulo" class="form-label">Título de la misión</label>
+                                <input type="text" class="form-control" id="titulo" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="descripcion" class="form-label">Descripción</label>
+                                <textarea class="form-control" id="descripcion" rows="3" required></textarea>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="recompensa" class="form-label">Recompensa (Oro)</label>
+                                <input type="number" class="form-control" id="recompensa" min="1" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Ubicación (Haz clic en el mapa para marcarla)</label>
+                                <div id="mapa-mision"></div>
+                                <small class="text-muted" id="coord-text">Por favor, selecciona una ubicación en el mapa.</small>
+                            </div>
+                            
+                            <input type="hidden" id="latitud" required>
+                            <input type="hidden" id="longitud" required>
+                            
+                            <div id="mensaje-feedback" class="alert d-none" role="alert"></div>
+
+                            <button type="submit" class="btn w-100 fw-bold shadow text-white" style="background-color: var(--accent-green);">Publicar Misión</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="text-white text-center py-4 mt-5">
+        <section class="iconos d-flex justify-content-center gap-3">
+            <a href="https://facebook.com" class="fs-4"><i class="bi bi-facebook"></i></a>
+            <a href="https://instagram.com" class="fs-4"><i class="bi bi-instagram"></i></a>
+            <a href="https://www.linkedin.com" class="fs-4"><i class="bi bi-linkedin"></i></a>
+            <a href="https://www.twitter.com" class="fs-4"><i class="bi bi-twitter-x"></i></a>
+            <a href="https://youtube.com" class="fs-4"><i class="bi bi-youtube"></i></a>
+        </section>
+        <div class="container">
+            <p>&copy; 2026 SideQuest - Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const map = L.map('mapa-mision').setView([40.4168, -3.7038], 13);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            let marker = null;
+
+            map.on('click', function(e) {
+                const lat = e.latlng.lat;
+                const lng = e.latlng.lng;
+                document.getElementById('latitud').value = lat;
+                document.getElementById('longitud').value = lng;
+                
+                document.getElementById('coord-text').textContent = `Coordenadas seleccionadas: ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+                document.getElementById('coord-text').classList.replace('text-muted', 'text-success');
+
+                if (marker) {
+                    marker.setLatLng(e.latlng);
+                } else {
+                    marker = L.marker(e.latlng).addTo(map);
+                }
+            });
+
+            // 2. Manejo del Formulario
+            document.getElementById('formCrearMision').addEventListener('submit', function(e) {
+                e.preventDefault(); // Prevenir recarga
+                
+                const latitud = document.getElementById('latitud').value;
+                const longitud = document.getElementById('longitud').value;
+                const feedback = document.getElementById('mensaje-feedback');
+                
+                if (!latitud || !longitud) {
+                    feedback.className = 'alert alert-danger mt-3';
+                    feedback.textContent = 'Debes seleccionar una ubicación en el mapa haciendo clic sobre él.';
+                    feedback.classList.remove('d-none');
+                    return;
+                }
+                
+                const misionData = {
+                    titulo: document.getElementById('titulo').value,
+                    descripcion: document.getElementById('descripcion').value,
+                    recompensa_gold: parseInt(document.getElementById('recompensa').value),
+                    latitud: parseFloat(latitud),
+                    longitud: parseFloat(longitud),
+                    creador_id: 1
+                };
+                
+                fetch('../api/crear_mision.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(misionData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        feedback.className = 'alert alert-success mt-3';
+                        feedback.textContent = '¡Misión creada exitosamente! Redirigiendo...';
+                        feedback.classList.remove('d-none');
+                        
+                        setTimeout(() => {
+                            window.location.href = 'Entradas.html';
+                        }, 1500);
+                    } else {
+                        feedback.className = 'alert alert-danger mt-3';
+                        feedback.textContent = 'Error: ' + data.message;
+                        feedback.classList.remove('d-none');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    feedback.className = 'alert alert-danger mt-3';
+                    feedback.textContent = 'Error de conexión con el servidor.';
+                    feedback.classList.remove('d-none');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -18,6 +18,16 @@ if (isset($_POST['borrar_cuenta'])) {
     header('Location: index.html');
     exit;
 }
+
+if (isset($_POST['add_gold'])) {
+    $amount = 100;
+    $stmt = $pdo->prepare("UPDATE users SET gold = gold + ? WHERE id = ?");
+    $stmt->execute([$amount, $id_usuario]);
+
+    // Recargar perfil para mostrar el nuevo oro
+    header('Location: perfil.php?gold_added=1');
+    exit;
+}
 $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
 $stmt->execute([$id_usuario]);
 $usuario = $stmt->fetch();
@@ -96,6 +106,10 @@ $usuario = $stmt->fetch();
                                 <small class="fw-bold">
                                     <?= $usuario['gold'] ?> Gold
                                 </small>
+                                <form method="POST" class="mt-2">
+                                    <button type="submit" name="add_gold"
+                                        class="btn btn-sm btn-warning fw-bold text-dark w-100">+100</button>
+                                </form>
                             </div>
                         </div>
                         <div class="col-4">
@@ -133,6 +147,14 @@ $usuario = $stmt->fetch();
             </div>
         </div>
     </main>
+    <script>
+        // Si venimos de añadir oro, actualizamos también el localStorage para que
+        // la cantidad se refleje en Entradas.html sin tener que hacer relogin.
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentGold = <?= $usuario['gold'] ?>;
+            localStorage.setItem('user_gold', currentGold);
+        });
+    </script>
 </body>
 
 </html>
