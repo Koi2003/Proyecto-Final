@@ -1,3 +1,3 @@
-# 🃏 TCG MANIA - Sistema de Gestión de Tienda y Torneos
+# SideQuest - Sistema de Venta de servicios gamificado
 
-Este repositorio contiene el Diseño de la Base de Datos para el proyecto TCG MANIA, una plataforma de venta de cartas coleccionables y gestión de mesas de juego.
+Este repositorio contiene el Diseño de la Base de Datos para el proyecto SideQuest, una plataforma en la que te pagan por hacer misiones secundarias o también puedes subirlas.
